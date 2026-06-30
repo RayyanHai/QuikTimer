@@ -1,0 +1,158 @@
+.settings {
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  background: var(--bg);
+  color: var(--fg);
+  padding: 20px 24px 28px;
+}
+
+.settings h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.settings section {
+  margin-bottom: 18px;
+}
+
+.settings h2 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 34px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.row-label {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.row-label .hint {
+  font-size: 11px;
+  color: var(--warn);
+  margin-top: 2px;
+}
+
+.row-control {
+  display: flex;
+  align-items: center;
+}
+
+.duration {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.duration input {
+  width: 52px;
+  font: inherit;
+  font-size: 13px;
+  text-align: right;
+  color: var(--fg);
+  background: var(--control-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 6px;
+}
+
+.duration.invalid input {
+  border-color: var(--warn);
+}
+
+select {
+  font: inherit;
+  font-size: 13px;
+  color: var(--fg);
+  background: var(--control-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+.hotkey {
+  font-size: 13px;
+  min-width: 110px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.hotkey.recording {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle .track {
+  position: absolute;
+  inset: 0;
+  background: var(--control-bg);
+  border-radius: 22px;
+  transition: background 0.15s ease;
+}
+
+.toggle .track::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  top: 2px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.toggle input:checked + .track {
+  background: var(--accent);
+}
+
+.toggle input:checked + .track::before {
+  transform: translateX(16px);
+}
+
+.reset-row {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.reset-row button {
+  font-size: 12px;
+  color: var(--muted);
+}

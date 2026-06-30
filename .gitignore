@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.DS_Store
+*.log
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/schemas/
+
+# Generated icon source (regenerate with src-tauri/gen-icon.py)
+src-tauri/icon-src.png
