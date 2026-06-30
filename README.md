@@ -1,4 +1,5 @@
 # QuikTimer
+<img width="2000" height="2000" alt="QuikTimer Logo 1" src="https://github.com/user-attachments/assets/ff00205b-9094-44b0-8d38-7ac95084677d" />
 
 A lightweight macOS menu bar timer that starts instantly with a global hotkey,
 shows a tiny floating countdown, and warns you before a short task goes over time.
