@@ -178,6 +178,12 @@ export default function Settings() {
             onChange={(accel) => void update({ startHotkey: accel })}
           />
         </Row>
+        <Row label="Reset timer" hint="Restart from the full duration">
+          <HotkeyInput
+            value={s.resetHotkey}
+            onChange={(accel) => void update({ resetHotkey: accel })}
+          />
+        </Row>
       </section>
 
       <section>

@@ -18,7 +18,8 @@ const PANEL_COMPACT = { width: 168, height: 54 };
 
 let initialized = false;
 let tray: TrayIcon | null = null;
-let currentHotkey: string | null = null;
+let currentStartHotkey: string | null = null;
+let currentResetHotkey: string | null = null;
 let savingPosition = false;
 
 function panel() {
@@ -70,6 +71,27 @@ async function handleStartHotkey() {
   }
 }
 
+/** Reset behavior: restart from the full duration and bring the panel forward. */
+async function handleResetHotkey() {
+  timer.reset();
+  await showPanel(true);
+}
+
+/**
+ * When start and reset share a hotkey (the default), fold them into one action:
+ * start when idle, reset when a timer is already active.
+ */
+async function handleStartOrResetHotkey() {
+  const status = timer.getState().status;
+  const isActive =
+    status === "RUNNING" ||
+    status === "WARNING" ||
+    status === "PAUSED" ||
+    status === "OVERTIME";
+  if (isActive) await handleResetHotkey();
+  else await handleStartHotkey();
+}
+
 async function applyPanelPrefs() {
   const s = await loadSettings();
   const w = panel();
@@ -113,13 +135,26 @@ async function registerHotkeyFromSettings(): Promise<boolean> {
   const s = await loadSettings();
   try {
     await unregisterAll();
-    await register(s.startHotkey, (event) => {
-      if (event.state === "Pressed") void handleStartHotkey();
-    });
-    currentHotkey = s.startHotkey;
+    if (s.resetHotkey === s.startHotkey) {
+      // Same accelerator — registering it twice throws, so use one combined
+      // handler that starts when idle and resets when active.
+      await register(s.startHotkey, (event) => {
+        if (event.state === "Pressed") void handleStartOrResetHotkey();
+      });
+    } else {
+      await register(s.startHotkey, (event) => {
+        if (event.state === "Pressed") void handleStartHotkey();
+      });
+      await register(s.resetHotkey, (event) => {
+        if (event.state === "Pressed") void handleResetHotkey();
+      });
+    }
+    currentStartHotkey = s.startHotkey;
+    currentResetHotkey = s.resetHotkey;
     return true;
   } catch {
-    currentHotkey = null;
+    currentStartHotkey = null;
+    currentResetHotkey = null;
     // Best-effort heads-up; Settings also validates inline on change.
     try {
       const { sendNotification, isPermissionGranted } = await import(
@@ -128,7 +163,9 @@ async function registerHotkeyFromSettings(): Promise<boolean> {
       if (await isPermissionGranted()) {
         sendNotification({
           title: "QuikTimer",
-          body: `Could not register the shortcut ${s.startHotkey}. Open Settings to pick another.`,
+          body: `Could not register a shortcut (${s.startHotkey}${
+            s.resetHotkey !== s.startHotkey ? ` / ${s.resetHotkey}` : ""
+          }). Open Settings to pick another.`,
         });
       }
     } catch {
@@ -207,7 +244,10 @@ export async function initAppControl() {
   void listen("settings-changed", async () => {
     await applyPanelPrefs();
     const s = await loadSettings();
-    if (s.startHotkey !== currentHotkey) {
+    if (
+      s.startHotkey !== currentStartHotkey ||
+      s.resetHotkey !== currentResetHotkey
+    ) {
       await registerHotkeyFromSettings();
     }
   });

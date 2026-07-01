@@ -5,6 +5,7 @@ export interface Settings {
   defaultDurationSeconds: number;
   warningBeforeEndSeconds: number;
   startHotkey: string;
+  resetHotkey: string;
   alwaysOnTop: boolean;
   showPanelOnStart: boolean;
   rememberWindowPosition: boolean;
@@ -21,6 +22,7 @@ export const DEFAULT_SETTINGS: Settings = {
   defaultDurationSeconds: 360,
   warningBeforeEndSeconds: 15,
   startHotkey: "CommandOrControl+Shift+Space",
+  resetHotkey: "CommandOrControl+Shift+Space",
   alwaysOnTop: true,
   showPanelOnStart: true,
   rememberWindowPosition: true,
